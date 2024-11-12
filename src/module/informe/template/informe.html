@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Informe de Reclamos</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f9f9f9;
+      color: #f9f9f9;
+      padding: 20px;
+    }
+
+    .container {
+      max-width: 600px;
+      margin: 0 auto;
+      background-color: #213f57;
+      padding: 20px;
+      border-radius: 8px;
+    }
+
+    .header {
+      font-size: 24px;
+      color: #f9f9f9;
+      text-align: center;
+      margin-bottom: 34px;
+    }
+
+    .card {
+      background-color: #f1f1f1;
+      padding: 8px 24px;
+      margin-bottom: 10px;
+      border-radius: 8px;
+      color: #213f57;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .value {
+      font-weight: bold;
+      font-size: large;
+      color: #f1f1f1;
+      background-color: #142431;
+      padding: 6px;
+      border-radius: 6px;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+    <h1 class="header">Informe de Reclamos</h1>
+
+    <div class="card">
+      <h3>Total de reclamos</h3>
+      <span class="value">{{reclamosTotales}}</span>
+    </div>
+
+    <div class="card">
+      <h3>Reclamos Finalizados</h3>
+      <span class="value">{{reclamosFinalizados}}</span>
+    </div>
+
+    <div class="card">
+      <h3>Reclamos No Finalizados</h3>
+      <span class="value">{{reclamosNoFinalizados}}</span>
+    </div>
+
+    <div class="card">
+      <h3>Tipo de Reclamo más frecuente</h3>
+      <span class="value">{{descripcionTipoRreclamoFrecuente}}</span>
+    </div>
+
+    <div class="card">
+      <h3>Cantidad de reclamos de tipo más frecuente</h3>
+      <span class="value">{{cantidadTipoRreclamoFrecuente}}</span>
+    </div>
+
+  </div>
+</body>
+
+</html>
