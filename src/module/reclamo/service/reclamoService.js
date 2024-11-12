@@ -5,6 +5,18 @@ export default class ReclamoService {
     this.emailService = emailService;
   }
 
+  async getAllPorPagina() {
+   const reclamos= await this.reclamoRepository.getAll();
+   /* paso1: crear un array*/
+   /* paso2: ordenar por fecha*/
+   /* paso3: ya ordenado, hacer un bucle*/
+   /* paso4: en este bucle, se agrega un contador (configurado con base/limite 5)*/
+   /* paso5: verificar si es multiplo de 5, para que se pase al siguiente array*/
+   /* paso6: una vez que se complete los 5, van a la posicion 0 del array principal*/
+   /* paso7: cada 5 reclamos/recorridos aumenta el contador de paginas*/
+   /* paso8: devolver resultado final */
+  }
+
   async getAll() {
     return await this.reclamoRepository.getAll();
   }

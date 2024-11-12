@@ -40,7 +40,7 @@ export default class ReclamoController {
 
   async getAllPorPag(req, res) {
     try {
-      const reclamo = await this.reclamoService.getAll();
+      const reclamo = await this.reclamoService.getAllPorPag();
       res.status(200);
       res.send({ data: reclamo });
     } catch (error) {
@@ -48,6 +48,7 @@ export default class ReclamoController {
       res.send({ message: "Error al obtener los reclamos" });
     }
   }
+
   async getOneById(req, res) {
     try {
       const { id } = req.params;
