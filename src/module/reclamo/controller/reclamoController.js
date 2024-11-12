@@ -15,6 +15,9 @@ export default class ReclamoController {
     app.get(this.ROUTE_BASE, this.authRequest(["Administrador"]), this.getAll.bind(this));
     app.get(`${ROUTE}/:id`, this.authRequest(["Administrador", "Cliente"]), this.getOneById.bind(this));
     app.get(`${ROUTE}/report/:format`, this.authRequest(["Administrador"]), this.generateReport.bind(this));
+    app.get(this.ROUTE_BASE+"/filtrar", this.authRequest(["Administrador"]), this.getAllPorPag.bind(this));
+    
+    /*Cambio agregado para recuperatorio*/
     app.post(
       ROUTE, this.authRequest(["Administrador", "Cliente"]),
       validateCreate(this.validationService),
@@ -35,6 +38,16 @@ export default class ReclamoController {
     }
   }
 
+  async getAllPorPag(req, res) {
+    try {
+      const reclamo = await this.reclamoService.getAll();
+      res.status(200);
+      res.send({ data: reclamo });
+    } catch (error) {
+      res.status(500);
+      res.send({ message: "Error al obtener los reclamos" });
+    }
+  }
   async getOneById(req, res) {
     try {
       const { id } = req.params;
