@@ -15,7 +15,7 @@ export default class ReclamoController {
     app.get(this.ROUTE_BASE, this.authRequest(["Administrador"]), this.getAll.bind(this));
     app.get(`${ROUTE}/:id`, this.authRequest(["Administrador", "Cliente"]), this.getOneById.bind(this));
     app.get(`${ROUTE}/report/:format`, this.authRequest(["Administrador"]), this.generateReport.bind(this));
-    app.get(this.ROUTE_BASE+"/filtrar", this.authRequest(["Administrador"]), this.getAllPorPag.bind(this));
+    app.get(this.ROUTE_BASE+"filtrar/:pagina", this.authRequest(["Administrador"]), this.getAllPorPag.bind(this));
     
     /*Cambio agregado para recuperatorio*/
     app.post(
@@ -40,7 +40,15 @@ export default class ReclamoController {
 
   async getAllPorPag(req, res) {
     try {
-      const reclamo = await this.reclamoService.getAllPorPag();
+      const { pagina } = req.params;
+
+      if (!pagina) {
+        res.status(400);
+        res.send({ message: "Debe indicar una pagina" });
+        return;
+      }
+
+      const reclamo = await this.reclamoService.getAllPorPag(pagina);
       res.status(200);
       res.send({ data: reclamo });
     } catch (error) {

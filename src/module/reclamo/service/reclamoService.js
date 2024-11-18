@@ -5,17 +5,49 @@ export default class ReclamoService {
     this.emailService = emailService;
   }
 
-  async getAllPorPagina() {
+  async getAllPorPag(pagina)  {
    const reclamos= await this.reclamoRepository.getAll();
    /* paso1: crear un array*/
+   const numPagina = parseInt(pagina); 
+   const principal= [];
    /* paso2: ordenar por fecha*/
-   /* paso3: ya ordenado, hacer un bucle*/
+   reclamos.sort((a, b) => {
+    return b.fechaCreado - a.fechaCreado;
+   });
+   
+  
+   // Agrupar los reclamos en grupos de 3
+  const gruposDeTres = [];
+  let grupoActual = [];
+  for (const reclamo of reclamos) {
+    grupoActual.push(reclamo);
+    if (grupoActual.length === 3) {
+      gruposDeTres.push(grupoActual);
+      grupoActual = [];
+    }
+  }
+  // Agregar el último grupo si no tiene 3 elementos
+  if (grupoActual.length > 0) {
+    gruposDeTres.push(grupoActual);
+  }
+  if (numPagina > gruposDeTres.length){
+    principal= []
+  }
+ else {
+  return gruposDeTres[numPagina];
+
+ }
+  
+
+  
+}
    /* paso4: en este bucle, se agrega un contador (configurado con base/limite 5)*/
    /* paso5: verificar si es multiplo de 5, para que se pase al siguiente array*/
    /* paso6: una vez que se complete los 5, van a la posicion 0 del array principal*/
    /* paso7: cada 5 reclamos/recorridos aumenta el contador de paginas*/
    /* paso8: devolver resultado final */
-  }
+   
+  
 
   async getAll() {
     return await this.reclamoRepository.getAll();
