@@ -70,7 +70,7 @@ export default class ReclamoService {
   }
 
   async update(id, changes) {
-    if (!changes) {
+    if (!!changes) {
       changes = { idReclamoEstado: 3 };
 
       const reclamo = await this.getOneById(id);
