@@ -86,4 +86,21 @@ export default class UsuarioRepository {
       throw error;
     }
   }
+
+  async getUsersCountByOffice() {
+    try {
+      const sqlQuery = `
+      SELECT o.nombre AS oficina, COUNT(u.idUsuario) AS cantidad_usuarios
+      FROM usuarios u
+      INNER JOIN oficinas o ON u.oficinaId = o.idOficina  
+      WHERE u.activo = 1
+      GROUP BY o.idOficina
+      `;
+      const [rows] = await this.database.query(sqlQuery);
+      return rows;
+    } catch (error) {
+      console.error("Error en la consulta de estadísticas: ", error);
+      throw error;
+    }
+  }
 }
