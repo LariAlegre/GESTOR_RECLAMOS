@@ -5,50 +5,6 @@ export default class ReclamoService {
     this.emailService = emailService;
   }
 
-  async getAllPorPag(pagina)  {
-   const reclamos= await this.reclamoRepository.getAll();
-   /* paso1: crear un array*/
-   const numPagina = parseInt(pagina); 
-   const principal= [];
-   /* paso2: ordenar por fecha*/
-   reclamos.sort((a, b) => {
-    return b.fechaCreado - a.fechaCreado;
-   });
-   
-  
-   // Agrupar los reclamos en grupos de 3
-  const gruposDeTres = [];
-  let grupoActual = [];
-  for (const reclamo of reclamos) {
-    grupoActual.push(reclamo);
-    if (grupoActual.length === 3) {
-      gruposDeTres.push(grupoActual);
-      grupoActual = [];
-    }
-  }
-  // Agregar el último grupo si no tiene 3 elementos
-  if (grupoActual.length > 0) {
-    gruposDeTres.push(grupoActual);
-  }
-  if (numPagina > gruposDeTres.length){
-    principal= []
-  }
- else {
-  return gruposDeTres[numPagina];
-
- }
-  
-
-  
-}
-   /* paso4: en este bucle, se agrega un contador (configurado con base/limite 5)*/
-   /* paso5: verificar si es multiplo de 5, para que se pase al siguiente array*/
-   /* paso6: una vez que se complete los 5, van a la posicion 0 del array principal*/
-   /* paso7: cada 5 reclamos/recorridos aumenta el contador de paginas*/
-   /* paso8: devolver resultado final */
-   
-  
-
   async getAll() {
     return await this.reclamoRepository.getAll();
   }
@@ -57,8 +13,14 @@ export default class ReclamoService {
     return await this.reclamoRepository.getOneById(id);
   }
 
-  async getReportData() {
-    return await this.reclamoRepository.getReportData();
+  async getReportData(format) {
+    if (format === 'pdf') {
+      return await this.reclamoRepository.getReportData1();  // Llamada para PDF
+    } else if (format === 'csv') {
+      return await this.reclamoRepository.getReportData2();  // Llamada para CSV
+    } else {
+      throw new Error("Formato no soportado");
+    }
   }
 
   async create(reclamo) {
@@ -70,7 +32,7 @@ export default class ReclamoService {
   }
 
   async update(id, changes) {
-    if (!!changes) {
+    if (!changes) {
       changes = { idReclamoEstado: 3 };
 
       const reclamo = await this.getOneById(id);
