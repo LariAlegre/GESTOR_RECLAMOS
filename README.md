@@ -8,15 +8,14 @@ Trabajo Práctico integrador final - Grupo 19
 - Lucas Ruiz
 - Giovanni Percara
 - Annoni Julian
-- Sanchez Daniela
-- Sanchez Agustin
+
 
 ## Levantar el proyecto localmente
 
 - Clonar el repositorio
 
 ```bash
-  git clone https://github.com/agusscript/gestor-reclamos.git
+  git clone https://github.com/LariAlegre/GESTOR_RECLAMOS
 ```
 
 - Situarse en la carpeta raíz del proyecto e instalar las dependencias
