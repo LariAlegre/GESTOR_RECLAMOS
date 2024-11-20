@@ -70,8 +70,7 @@ export default class ReclamoService {
   }
 
   async update(id, changes) {
-    if (!!changes) {
-      changes = { idReclamoEstado: 3 };
+    if (changes) {
 
       const reclamo = await this.getOneById(id);
 
@@ -88,7 +87,7 @@ export default class ReclamoService {
           nombre: usuarioCreador.nombre,
           apellido: usuarioCreador.apellido,
           idReclamo: id,
-          estado: "Cancelado",
+          estado: reclamo.estado,
         }
       });
     }
