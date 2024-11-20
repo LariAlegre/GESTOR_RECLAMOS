@@ -50,11 +50,11 @@ export default class ReclamoService {
           nombre: usuarioCreador.nombre,
           apellido: usuarioCreador.apellido,
           idReclamo: id,
-          estado: "Cancelado",
+          estado: reclamo.estado,
         }
       });
-    }
 
     return await this.reclamoRepository.update(id, changes);
   }
+}
 }
