@@ -15,9 +15,6 @@ export default class ReclamoController {
     app.get(this.ROUTE_BASE, this.authRequest(["Administrador"]), this.getAll.bind(this));
     app.get(`${ROUTE}/:id`, this.authRequest(["Administrador", "Cliente"]), this.getOneById.bind(this));
     app.get(`${ROUTE}/report/:format`, this.authRequest(["Administrador"]), this.generateReport.bind(this));
-    app.get(this.ROUTE_BASE+"filtrar/:pagina", this.authRequest(["Administrador"]), this.getAllPorPag.bind(this));
-    
-    /*Cambio agregado para recuperatorio*/
     app.post(
       ROUTE, this.authRequest(["Administrador", "Cliente"]),
       validateCreate(this.validationService),
@@ -34,26 +31,7 @@ export default class ReclamoController {
       res.send({ data: reclamo });
     } catch (error) {
       res.status(500);
-      res.send({ message: "Error al obtener los reclamos" });
-    }
-  }
-
-  async getAllPorPag(req, res) {
-    try {
-      const { pagina } = req.params;
-
-      if (!pagina) {
-        res.status(400);
-        res.send({ message: "Debe indicar una pagina" });
-        return;
-      }
-
-      const reclamo = await this.reclamoService.getAllPorPag(pagina);
-      res.status(200);
-      res.send({ data: reclamo });
-    } catch (error) {
-      res.status(500);
-      res.send({ message: "Error al obtener los reclamos" });
+      res.send({ message: "Error al obtener los reclamos"});
     }
   }
 
@@ -79,33 +57,48 @@ export default class ReclamoController {
       res.send({ data: reclamo });
     } catch (error) {
       res.status(500);
-      res.send({ message: "Error al obtener el reclamo" });
+      res.send({ message: "Error al obtener el reclamo"});
     }
   }
 
   async generateReport(req, res) {
     try {
       const { format } = req.params;
-
-      if (format !== 'pdf') {
-        res.status(400)
-        res.send({ message: "Formato no soportado. Solo se permite pdf" });
+  
+      // Verificar si el formato es pdf o csv
+      if (format !== 'pdf' && format !== 'csv') {
+        res.status(400).send({ message: "Formato no soportado. Solo se permite pdf o csv" });
         return;
       }
-
-      const reportData = await this.reclamoService.getReportData();
-      const pdfBuffer = await this.informeService.generatePDF(reportData);
-
-      res.set({
-        'Content-Type': 'application/pdf',
-        'Content-Disposition': 'attachment; filename="informe.pdf"',
-      });
-      res.end(pdfBuffer);
+  
+      const reportData = await this.reclamoService.getReportData(format);  // Pasar 'format'
+  
+      if (format === 'pdf') {
+        const pdfBuffer = await this.informeService.generatePDF(reportData);
+    
+        res.set({
+          'Content-Type': 'application/pdf',
+          'Content-Disposition': 'attachment; filename="informe.pdf"',
+        });
+        res.end(pdfBuffer);
+      } else if (format === 'csv') {
+        const csvBuffer = await this.informeService.generateCSV(reportData);
+    
+        res.set({
+          'Content-Type': 'text/csv',
+          'Content-Disposition': 'attachment; filename="informe.csv"',
+        });
+        res.end(csvBuffer);
+      }
     } catch (error) {
-      res.status(500)
-      res.send({ message: "Error al generar el informe" });
+      console.error("Error al generar el informe: ", error);
+      res.status(500).send({
+        message: "Error al generar el informe",
+        details: error.message,
+      });
     }
   }
+  
 
   async create(req, res) {
     const errors = await this.validationService.validationResult(req);
@@ -122,7 +115,7 @@ export default class ReclamoController {
       res.send({ data: reclamo });
     } catch (error) {
       res.status(500);
-      res.send({ message: "Error al crear el reclamo" });
+      res.send({ message: "Error al crear el reclamo"});
     }
   }
 
@@ -148,7 +141,7 @@ export default class ReclamoController {
       res.send({ data: reclamo });
     } catch (error) {
       res.status(500);
-      res.send({ message: "Error al actualizar el reclamo" });
+      res.send({ message: "Error al actualizar el reclamo"});
     }
   }
 
@@ -182,7 +175,7 @@ export default class ReclamoController {
       res.send({ message: "Reclamo cancelado correctamente", data: updatedReclamo });
     } catch (error) {
       res.status(500);
-      res.send({ message: "Error al cancelar el reclamo" });
+      res.send({ message: "Error al cancelar el reclamo"});
     }
   }
 }
